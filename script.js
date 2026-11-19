@@ -215,7 +215,7 @@
     var cavity = $('#t-cavity'), halo = $('#t-halo'), dull = $('#t-dull'), edge = $('#t-edge'), crack = $('#t-crack');
     var gloss = $('#t-gloss-r'), shine = $('#t-shine'), shine2 = $('#t-shine2');
     var spark = $('#t-spark path'), spark2 = $('#t-spark2 path'), ringfx = $('#t-ringfx');
-    var pulse = $('.scene__pulse'), floatG = $('#t-float');
+    var pulse = $('.scene__pulse'), floatG = $('.scene__float');
     var OX = 97, OY = 59;
     var L = path.getTotalLength();
     function nearest(x, y) {
@@ -337,8 +337,8 @@
         loops.push(gsap.to(img, { xPercent: i % 2 ? -2.2 : 2, yPercent: i % 2 ? 2.4 : -2, rotation: i % 2 ? .9 : -1.1, scale: 1.05, duration: 9 + i * 3, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
       });
       beads.forEach(function (b, i) { loops.push(gsap.to(b, { y: i % 2 ? 22 : -26, x: i % 2 ? -10 : 12, duration: 5 + i * 1.7, ease: 'sine.inOut', yoyo: true, repeat: -1 })); });
-      loops.push(gsap.to('.ring--a', { rotation: 360, svgOrigin: '300 300', duration: 70, ease: 'none', repeat: -1 }));
-      loops.push(gsap.to('.ring--b', { rotation: -360, svgOrigin: '300 300', duration: 46, ease: 'none', repeat: -1 }));
+      loops.push(gsap.to('.ring--a', { rotation: 360, duration: 70, ease: 'none', repeat: -1 }));
+      loops.push(gsap.to('.ring--b', { rotation: -360, duration: 46, ease: 'none', repeat: -1 }));
       ScrollTrigger.create({ trigger: hero, start: 'top bottom', end: 'bottom top', onToggle: function (self) { loops.forEach(function (t) { self.isActive ? t.play() : t.pause(); }); } });
 
       if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {

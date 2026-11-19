@@ -115,7 +115,7 @@ html.js .draw,html.js .draw-scrub{stroke-dasharray:1;stroke-dashoffset:1}
 .hero__bg::before{content:"";position:absolute;inset:0 auto 0 0;width:34%;background:url(assets/img/silk-1.svg) right center/cover no-repeat;transform:scaleX(-1);opacity:0}
 @media (min-width:1800px){.hero__bg::before{opacity:.5}}
 .silk{position:absolute;inset:-6% -4%;will-change:transform}
-.silk img{width:100%;height:100%;object-fit:cover;object-position:right center}
+.silk img{width:100%;height:100%;object-fit:cover;object-position:right center;will-change:transform}
 .silk--1{opacity:.9}
 .bead{position:absolute;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff 0,rgba(255,255,255,.75) 22%,rgba(191,221,238,.55) 62%,rgba(58,127,174,.22) 100%);box-shadow:0 20px 40px -18px rgba(10,54,94,.3);will-change:transform}
 .bead--1{width:74px;height:74px;right:41%;top:19%;filter:blur(1.5px)}
@@ -130,7 +130,8 @@ html.js .draw,html.js .draw-scrub{stroke-dasharray:1;stroke-dashoffset:1}
 .scene:focus-visible{outline-offset:8px;border-radius:50%}
 .scene>*{position:absolute;inset:0;width:100%;height:100%}
 .scene__rings{overflow:visible}
-.ring{transform-origin:300px 300px}
+.ring,.scene__float>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ring,.scene__float{will-change:transform}
 .scene__disc{inset:14.7%;width:auto;height:auto;border-radius:50%;background:radial-gradient(circle at 36% 28%,#fff 0,#fff 52%,rgba(250,253,255,.9) 100%);box-shadow:0 60px 110px -40px rgba(10,54,94,.38),0 18px 40px -22px rgba(58,127,174,.35),inset 0 0 0 1px rgba(255,255,255,.95),inset 0 -30px 70px rgba(191,221,238,.45),inset 0 20px 40px rgba(255,255,255,.9)}
 .scene__pulse{inset:14.7%;width:auto;height:auto;border-radius:50%;box-shadow:0 0 0 1.5px rgba(58,127,174,.6);opacity:0}
 .scene__tooth{overflow:visible}
