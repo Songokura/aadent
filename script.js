@@ -276,9 +276,10 @@
       gsap.set(floatG, { y: 0 });
       dotOnThread();
     }
+    var calm = false;
     function finish() {
       done = true; doneAt = Date.now(); scene.classList.add('is-done');
-      if (reduce) return;
+      if (reduce || calm) return;
       idle.push(gsap.to(floatG, { y: -9, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
       idle.push(gsap.to(spark, { scale: .78, rotation: 45, duration: 1.8, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
       idle.push(gsap.to(spark2, { scale: .5, duration: 1.3, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: .4 }));
@@ -325,7 +326,7 @@
     scene.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
     scene.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && done && Date.now() - doneAt > 2500) play(); });
     reset();
-    return { play: play };
+    return { play: play, calm: function () { calm = true; idle.forEach(function (t) { t.pause(); }); } };
   })();
 
   var NARROW = window.matchMedia('(max-width:860px)').matches;
@@ -342,7 +343,25 @@
       beads.forEach(function (b, i) { loops.push(gsap.to(b, { y: i % 2 ? 22 : -26, x: i % 2 ? -10 : 12, duration: 5 + i * 1.7, ease: 'sine.inOut', yoyo: true, repeat: -1 })); });
       loops.push(gsap.to('.ring--a', { rotation: 360, duration: 70, ease: 'none', repeat: -1 }));
       loops.push(gsap.to('.ring--b', { rotation: -360, duration: 46, ease: 'none', repeat: -1 }));
-      ScrollTrigger.create({ trigger: hero, start: 'top bottom', end: 'bottom top', onToggle: function (self) { loops.forEach(function (t) { self.isActive ? t.play() : t.pause(); }); } });
+      var bgLoops = loops.slice(0, silks.length + beads.length), lite = false, heroOn = true;
+      ScrollTrigger.create({ trigger: hero, start: 'top bottom', end: 'bottom top', onToggle: function (self) { heroOn = self.isActive; loops.forEach(function (t) { (self.isActive && !(lite && bgLoops.indexOf(t) > -1)) ? t.play() : t.pause(); }); } });
+      /* Страховка для слабой отрисовки (Firefox без видеокарты, старые ноутбуки):
+         если герой стабильно идёт ниже 40 кадров/с, фоновые покачивания героя (шёлк, бусины,
+         кольца, зуб) замирают; лечение зуба по клику и остальные анимации сайта работают. */
+      (function watch() {
+        var n = 0, t0 = 0, tries = 0;
+        function tick() {
+          if (!heroOn || d.hidden) { n = 0; t0 = 0; return; }
+          var now = performance.now(); if (!t0) { t0 = now; n = 0; return; }
+          n++;
+          if (now - t0 >= 2000) {
+            var fps = n * 1000 / (now - t0); n = 0; t0 = 0; tries++;
+            if (fps < 40) { lite = true; bgLoops = loops.slice(); loops.forEach(function (t) { t.pause(); }); if (sceneApi) sceneApi.calm(); gsap.ticker.remove(tick); }
+            else if (tries >= 4) gsap.ticker.remove(tick);
+          }
+        }
+        gsap.delayedCall(7, function () { gsap.ticker.add(tick); });
+      })();
 
       if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
         var movers = silks.concat(beads).map(function (el, i) {
@@ -352,8 +371,8 @@
         var sx = gsap.quickTo(scene, 'x', { duration: 1.2, ease: 'power3.out' }), sy = gsap.quickTo(scene, 'y', { duration: 1.2, ease: 'power3.out' });
         hero.addEventListener('pointermove', function (e) {
           var nx = e.clientX / window.innerWidth - .5, ny = e.clientY / window.innerHeight - .5;
-          movers.forEach(function (m) { m.x(-nx * 34 * m.dep); m.y(-ny * 24 * m.dep); });
-          sx(nx * 14); sy(ny * 10);
+          if (!lite) movers.forEach(function (m) { m.x(-nx * 34 * m.dep); m.y(-ny * 24 * m.dep); });
+          if (!lite) { sx(nx * 14); sy(ny * 10); }
         });
       }
       gsap.to('.hero__bg', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
