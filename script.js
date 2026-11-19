@@ -177,6 +177,9 @@
   if (window.CustomEase) { EASE = window.CustomEase.create('aa', '.2,.7,.2,1'); } else { EASE = 'power3.out'; }
   var T2 = .4, T3 = 1, STG = .08;
   gsap.defaults({ ease: EASE, duration: T3 });
+  /* Экраны 120-165 Гц: анимации в 60 кадров/с. Без потолка встроенная видеокарта
+     перерисовывает герой 165 раз в секунду и тормозит весь компьютер (замер: 72% -> 31%). */
+  gsap.ticker.fps(60);
 
   if (!reduce && window.Lenis) {
     lenis = new window.Lenis({ lerp: .11, wheelMultiplier: 1 });
