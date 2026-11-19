@@ -87,6 +87,42 @@
   var mqW = window.innerWidth;
   window.addEventListener('resize', function () { if (window.innerWidth !== mqW) { mqW = window.innerWidth; buildMq(); } });
 
+  /* ---------- медицинские фото: заглушка до клика ---------- */
+  (function () {
+    var works = $('.works'); if (!works) return;
+    $$('.veil', works).forEach(function (v) {
+      v.addEventListener('click', function () {
+        works.classList.add('is-open');
+        var t = $('#cases'); if (t) t.focus({ preventScroll: true });
+      });
+    });
+  })();
+
+  /* ---------- сертификаты врачей ---------- */
+  (function () {
+    var lb = $('#lb'); if (!lb || !lb.showModal) return;
+    var img = $('.lb__img', lb), cap = $('.lb__cap', lb), nav = $('.lb__nav', lb), num = $('.lb__n', lb);
+    var prev = $('.lb__prev', lb), next = $('.lb__next', lb), list = [], i = 0, name = '', opener = null;
+    function show() {
+      img.src = list[i]; img.alt = name; cap.textContent = name;
+      nav.hidden = list.length < 2; num.textContent = (i + 1) + ' / ' + list.length;
+      prev.disabled = i === 0; next.disabled = i === list.length - 1;
+      $('.lb__fig', lb).scrollTop = 0;
+    }
+    $$('.doc__cert').forEach(function (b) {
+      b.addEventListener('click', function () {
+        list = b.getAttribute('data-docs').split('|'); i = 0; opener = b;
+        var h = b.closest('.doc').querySelector('.h3'); name = h ? h.textContent.trim() : '';
+        show(); lb.showModal(); if (lenis) lenis.stop(); root.classList.add('lb-open');
+      });
+    });
+    prev.addEventListener('click', function () { if (i > 0) { i--; show(); } });
+    next.addEventListener('click', function () { if (i < list.length - 1) { i++; show(); } });
+    $('.lb__x', lb).addEventListener('click', function () { lb.close(); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+    lb.addEventListener('close', function () { if (lenis) lenis.start(); root.classList.remove('lb-open'); if (opener) opener.focus(); });
+  })();
+
   /* ---------- шапка и меню ---------- */
   var hdr = $('#hdr'), burger = $('.burger'), mmenu = $('#mmenu');
   function onScrollHdr() { hdr.classList.toggle('is-stuck', window.scrollY > 12); }
