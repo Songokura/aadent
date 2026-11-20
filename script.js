@@ -110,8 +110,9 @@
       $('.lb__fig', lb).scrollTop = 0;
     }
     $$('.doc__cert').forEach(function (b) {
-      b.addEventListener('click', function () {
-        list = b.getAttribute('data-docs').split('|'); i = 0; opener = b;
+      b.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-i]');
+        list = b.getAttribute('data-docs').split('|'); i = t ? +t.getAttribute('data-i') : 0; opener = b;
         var h = b.closest('.doc').querySelector('.h3'); name = h ? h.textContent.trim() : '';
         show(); lb.showModal(); if (lenis) lenis.stop(); root.classList.add('lb-open');
       });
