@@ -171,6 +171,23 @@
     prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: reduce ? 'auto' : 'smooth' }); });
     next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: reduce ? 'auto' : 'smooth' }); });
     track.addEventListener('scroll', upd, { passive: true });
+    // на телефоне лента работ по высоте текущего слайда, без пустоты под парой фото
+    var raf = 0;
+    function fit() {
+      raf = 0;
+      if (track.id !== 'cases') return;
+      if (window.innerWidth > 560) { track.style.height = ''; return; }
+      var tr = track.getBoundingClientRect(), h = 0;
+      [].forEach.call(track.children, function (c) { var r = c.getBoundingClientRect(); if (r.right > tr.left + 30 && r.left < tr.right - 30) h = Math.max(h, c.offsetHeight); });
+      var cs = getComputedStyle(track);
+      if (h) track.style.height = Math.ceil(h + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)) + 'px';
+    }
+    function fitSoon() { if (!raf) raf = requestAnimationFrame(fit); }
+    track.addEventListener('scroll', fitSoon, { passive: true });
+    window.addEventListener('resize', fitSoon);
+    window.addEventListener('load', fitSoon);
+    $$('img', track).forEach(function (im) { im.addEventListener('load', fitSoon); });
+    fitSoon();
     window.addEventListener('resize', upd);
     window.addEventListener('load', upd);
     upd();
