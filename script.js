@@ -298,7 +298,7 @@
       heal.setAttribute('stroke-dasharray', '0 ' + (L * 3).toFixed(2));
       healGlow.setAttribute('stroke-dasharray', '0 ' + (L * 3).toFixed(2));
       gsap.set([heal, healGlow], { opacity: 0 });
-      gsap.set(cavity, { scale: 1, svgOrigin: '314 128' });
+      gsap.set([cavity, edge], { scale: 1, svgOrigin: '314 128' });
       gsap.set(halo, { opacity: 1 }); gsap.set(dull, { opacity: .34 });
       gsap.set([edge, crack], { opacity: 1 });
       gsap.set(gloss, { x: 0 });
@@ -322,7 +322,7 @@
     }
     function pass(t, from, to, cav, at) {
       t.to(st, { x: to, duration: .62, ease: 'power2.inOut', onUpdate: drawHeal }, at)
-       .to(cavity, { scale: cav, duration: .7, ease: 'power2.inOut' }, at + .05)
+       .to([cavity, edge], { scale: cav, duration: .7, ease: 'power2.inOut' }, at + .05)
        .to(dot, { scale: 1.7, duration: .16, ease: 'power2.out', yoyo: true, repeat: 1, onStart: function () { burst(5); } }, at + .6);
     }
     function play() {
@@ -466,6 +466,16 @@
       gsap.from(p, { scale: 0, rotation: -90, svgOrigin: '0 0', duration: .9, ease: 'back.out(2.2)', delay: 1, scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
     });
   }
+  // коронки: колпачок над обточенным зубом, по наведению садится
+  $$('.crown').forEach(function (c) {
+    var cap = $('.cap', c), gd = $('.cap-guide', c); if (!cap) return;
+    var UP = -36;
+    gsap.set(cap, { y: UP });
+    if (reduce) return;
+    gsap.from(cap, { y: -96, opacity: 0, duration: 1.2, ease: 'power3.out', delay: .3, scrollTrigger: { trigger: c, start: 'top 82%', once: true } });
+    c.addEventListener('mouseenter', function () { gsap.to(cap, { y: 0, duration: .6, ease: 'power2.inOut', overwrite: true }); gsap.to(gd, { opacity: 0, duration: .3 }); });
+    c.addEventListener('mouseleave', function () { gsap.to(cap, { y: UP, duration: .7, ease: 'power2.out', overwrite: true }); gsap.to(gd, { opacity: 1, duration: .4, delay: .3 }); });
+  });
   // линии
   $$('.uline').forEach(function (u) {
     if (u.closest('.facts')) return;
