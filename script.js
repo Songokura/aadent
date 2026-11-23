@@ -194,6 +194,18 @@
     upd();
   });
 
+  /* ---------- конверсии Google Ads ---------- */
+  function fireConv(key) {
+    if (typeof window.gtag_report_conversion !== 'function' || !window.AW_CONV) return;
+    var sendTo = window.AW_CONV[key];
+    if (sendTo) window.gtag_report_conversion(undefined, sendTo);
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="tel:"], a[href*="wa.me"]') : null;
+    if (!a) return;
+    fireConv(a.getAttribute('href').indexOf('tel:') === 0 ? 'phone' : 'contact');
+  });
+
   /* ---------- форма ---------- */
   var form = $('#lead-form');
   if (form) {
@@ -208,6 +220,7 @@
       if (!okP) { phone.focus(); return; }
       var ruTopic = topic.options[topic.selectedIndex]._ru || topic.value;
       var txt = 'Здравствуйте! Заявка с сайта A&A Dent.\nИмя: ' + name.value.trim() + '\nТелефон: ' + phone.value.trim() + '\nЧто беспокоит: ' + ruTopic.replace(/&nbsp;/g, ' ');
+      fireConv('form');
       window.open('https://wa.me/77776941666?text=' + encodeURIComponent(txt), '_blank', 'noopener');
       var ok = $('.form__ok', form);
       ok.hidden = false;
