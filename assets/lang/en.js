@@ -257,5 +257,12 @@ window.SITE_EN = {
 "kr.ly.cer": "ceramic",
 "kr.ly.met": "metal framework",
 "kr.ly.own": "your own tooth",
-"kr.ly.zr": "zirconia, metal-free"
+"kr.ly.zr": "zirconia, metal-free",
+"kr.d.t": "Porcelain-fused-to-metal vs zirconium dioxide",
+"kr.d.intro": "Both types of crowns reliably restore a damaged tooth, but they differ in base material, aesthetics and price.",
+"kr.d.mk.n": "Porcelain-fused-to-metal",
+"kr.d.mk": "A porcelain-fused-to-metal crown has a metal framework inside, so it does not let light through like a natural tooth, and over time a dark line may appear at the gum.",
+"kr.d.zr.n": "Zirconium dioxide",
+"kr.d.zr": "Zirconium dioxide is a completely metal-free material with natural translucency: it is indistinguishable from natural enamel, does not cause allergies and requires gentler tooth preparation. Zirconia is also noticeably stronger against fracture and chips less often under heavy chewing loads.",
+"kr.d.sum": "As a result, zirconia crowns are more often chosen for maximum aesthetics in the smile zone and durability, while porcelain-fused-to-metal is a proven and more budget-friendly option."
 };
