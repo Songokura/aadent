@@ -92,8 +92,9 @@
     var works = $('.works'); if (!works) return;
     $$('.veil', works).forEach(function (v) {
       v.addEventListener('click', function () {
-        works.classList.add('is-open');
-        var t = $('#cases'); if (t) t.focus({ preventScroll: true });
+        var c = v.closest('.case'); if (!c) return;
+        c.classList.add('is-open');
+        var p = v.parentNode; p.setAttribute('tabindex', '-1'); p.focus({ preventScroll: true });
       });
     });
   })();
